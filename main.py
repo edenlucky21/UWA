@@ -80,3 +80,96 @@ def submit_student(
     db.add(student)
     db.commit()
     return {"status": "Student saved"}
+
+from fastapi.middleware.cors import CORSMiddleware
+
+# Allow frontend access
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# -------- ADMIN ENDPOINTS --------
+
+@app.get("/admin/tourists")
+def get_tourists(db: Session = Depends(get_db)):
+    return db.query(models.Tourist).all()
+
+@app.get("/admin/transit")
+def get_transit(db: Session = Depends(get_db)):
+    return db.query(models.Transit).all()
+
+@app.get("/admin/students")
+def get_students(db: Session = Depends(get_db)):
+    return db.query(models.Student).all()
+
+
+from datetime import date
+from sqlalchemy import func
+
+@app.get("/admin/daily-summary")
+def daily_summary(db: Session = Depends(get_db)):
+    today = date.today()
+
+    tourists = db.query(func.count(models.Tourist.id))\
+        .filter(func.date(models.Tourist.created_at) == today).scalar()
+
+    transit = db.query(func.count(models.Transit.id))\
+        .filter(func.date(models.Transit.created_at) == today).scalar()
+
+    students = db.query(func.count(models.Student.id))\
+        .filter(func.date(models.Student.created_at) == today).scalar()
+
+    return {
+        "date": str(today),
+        "tourists": tourists,
+        "transit": transit,
+        "students": students,
+        "total_visitors": tourists + transit + students
+    }
+
+from fastapi.responses import FileResponse
+import openpyxl
+
+@app.get("/admin/export/tourists")
+def export_tourists(db: Session = Depends(get_db)):
+    tourists = db.query(models.Tourist).all()
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Tourists"
+
+    ws.append(["Name", "Contact", "Visitor Type", "Nationality", "Date"])
+
+    for t in tourists:
+        ws.append([
+            t.name,
+            t.contact,
+            t.visitor_type,
+            t.nationality,
+            t.created_at.strftime("%Y-%m-%d %H:%M")
+        ])
+
+    file_path = "tourists_report.xlsx"
+    wb.save(file_path)
+
+    return FileResponse(
+        file_path,
+        filename="tourists_report.xlsx",
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
+from fastapi import HTTPException
+
+ADMIN_USER = "admin"
+ADMIN_PASS = "uwa123"
+
+@app.post("/admin/login")
+def admin_login(username: str = Form(...), password: str = Form(...)):
+    if username == ADMIN_USER and password == ADMIN_PASS:
+        return {"status": "success"}
+    raise HTTPException(status_code=401, detail="Invalid credentials")
+
+app = FastAPI()

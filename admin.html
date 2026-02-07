@@ -15,7 +15,7 @@
   <script>
     function login(e) {
       e.preventDefault();
-      fetch("http://127.0.0.1:8000/admin/login", {
+      fetch("http://UWA.onrender.com/admin/login", {
         method: "POST",
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
         body: `username=${username.value}&password=${password.value}`

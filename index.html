@@ -9,6 +9,7 @@
 
 <body>
   <div class="container">
+
     <div class="logo-container">
       <img src="UWA.png" alt="UWA" class="uwa-logo" />
       <h1>UGANDA WILDLIFE AUTHORITY</h1>
@@ -31,38 +32,32 @@
 
     <!-- TOURIST FORM -->
     <form id="touristForm" class="form-section"
-          action="http://127.0.0.1:8000/tourist"
-          method="POST"
-          enctype="multipart/form-data">
+          action="https://YOUR-BACKEND.onrender.com/tourist"
+          method="POST">
 
       <h3>Tourist Information</h3>
 
-      <div id="clientList">
-        <div class="client">
-          <label>Full Name:</label>
-          <input type="text" name="client_name" required />
+      <label>Full Name:</label>
+      <input type="text" name="client_name" required />
 
-          <label>Contact:</label>
-          <input type="tel" name="client_contact" required />
+      <label>Contact:</label>
+      <input type="tel" name="client_contact" required />
 
-          <label>Visitor Type:</label>
-          <select name="visitor_type" required>
-            <option value="">-- Select Visitor Type --</option>
-            <option value="FNR">Foreign Non-Resident (FNR)</option>
-            <option value="FR">Foreign Resident (FR)</option>
-            <option value="ROA">Rest of Africa (ROA)</option>
-            <option value="EAC">East African Community (EAC)</option>
-            <option value="CHILD">Child</option>
-          </select>
+      <label>Visitor Type:</label>
+      <select name="visitor_type" required>
+        <option value="">-- Select Visitor Type --</option>
+        <option value="FNR">Foreign Non-Resident (FNR)</option>
+        <option value="FR">Foreign Resident (FR)</option>
+        <option value="ROA">Rest of Africa (ROA)</option>
+        <option value="EAC">East African Community (EAC)</option>
+        <option value="CHILD">Child</option>
+      </select>
 
-          <label>Nationality:</label>
-          <select name="nationality" required>
-            <option value="">--Select Nationality--</option>
-          </select>
-        </div>
-      </div>
+      <label>Nationality:</label>
+      <select name="nationality" class="nationality-dropdown" required></select>
 
       <h3>Vehicle Information</h3>
+
       <label>Type of Car:</label>
       <input type="text" name="car_type" />
 
@@ -80,7 +75,7 @@
 
     <!-- TRANSIT FORM -->
     <form id="transitForm" class="form-section"
-          action="http://127.0.0.1:8000/transit"
+          action="https://YOUR-BACKEND.onrender.com/transit"
           method="POST">
 
       <h3>Transit Visitor Information</h3>
@@ -105,16 +100,14 @@
       </select>
 
       <label>Nationality:</label>
-      <select name="nationality" required>
-        <option value="">--Select Nationality--</option>
-      </select>
+      <select name="nationality" class="nationality-dropdown" required></select>
 
       <button type="submit" class="submitBtn">Submit</button>
     </form>
 
     <!-- STUDENT FORM -->
     <form id="studentForm" class="form-section"
-          action="http://127.0.0.1:8000/student"
+          action="https://YOUR-BACKEND.onrender.com/student"
           method="POST">
 
       <h3>Student Visitor Information</h3>
@@ -139,34 +132,17 @@
       </select>
 
       <label>Nationality:</label>
-      <select name="client_nationality[]" required>
-        <option value="">--Select Nationality--</option>
-      </select>
+      <select name="nationality" class="nationality-dropdown" required></select>
 
       <button type="submit" class="submitBtn">Submit</button>
     </form>
 
     <p class="admin-link">
-      <a href="admin.html" target="_blank">Open Admin Dashboard</a>
+      <a href="admin-login.html" target="_blank">Open Admin Dashboard</a>
     </p>
 
   </div>
 
-  <script>
-    const select = document.getElementById('categorySelect');
-    const forms = {
-      tourist: document.getElementById('touristForm'),
-      transit: document.getElementById('transitForm'),
-      student: document.getElementById('studentForm')
-    };
-
-    select.addEventListener('change', () => {
-      Object.values(forms).forEach(f => f.classList.remove('active'));
-      if (forms[select.value]) {
-        forms[select.value].classList.add('active');
-      }
-    });
-  </script>
-
+  <script src="script.js"></script>
 </body>
 </html>

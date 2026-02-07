@@ -6,7 +6,7 @@ import models
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="UWA Park Entry Backend")
+app = FastAPI(title="UWA Backend")
 
 # Dependency
 def get_db():
@@ -18,7 +18,7 @@ def get_db():
 
 @app.get("/")
 def home():
-    return {"message": "UWA Park Entry API is running"}
+    return {"message": "UWA API is running"}
 
 # ---------------- TOURIST ----------------
 @app.post("/tourist")
@@ -174,4 +174,3 @@ def admin_login(username: str = Form(...), password: str = Form(...)):
 
 
 
-app = FastAPI()
